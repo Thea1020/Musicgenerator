@@ -1,7 +1,8 @@
-// 视频播放结束后跳转到生成界面
+
+// MusicIP视频播放结束后跳转到生成界面
 document.getElementById('introVideo').onended = function() {
-    document.getElementById('videoPage').style.display = 'none';
-    document.getElementById('generatePage').style.display = 'block';
+    document.getElementById('videoPage').style.display = 'none'; // 隐藏视频界面
+    document.getElementById('generatePage').style.display = 'block'; // 显示生成界面
 };
 
 // 生成按钮点击事件
