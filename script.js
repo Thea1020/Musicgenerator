@@ -1,10 +1,9 @@
 
-// MusicIP视频播放结束后跳转到生成界面
-document.getElementById('introVideo').onended = function() {
+// 点击视频后跳转到生成界面
+document.getElementById('introVideo').onclick = function() {
     document.getElementById('videoPage').style.display = 'none'; // 隐藏视频界面
     document.getElementById('generatePage').style.display = 'block'; // 显示生成界面
 };
-
 // 生成按钮点击事件
 document.getElementById('generateButton').onclick = function() {
     // 随机生成和弦
