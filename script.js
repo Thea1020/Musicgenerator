@@ -1,4 +1,5 @@
 
+// 点击视频后跳转到生成界面
 document.getElementById('introVideo').onclick = function() {
     document.getElementById('videoPage').style.display = 'none'; // 隐藏视频界面
     document.getElementById('generatePage').style.display = 'block'; // 显示生成界面
