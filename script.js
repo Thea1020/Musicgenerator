@@ -1,108 +1,100 @@
-// 获取 DOM 元素
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const introVideo = document.getElementById('introVideo');
-const analyzeVideo = document.getElementById('analyzeVideo');
-const textInput = document.getElementById('textInput');
-const generateButton = document.getElementById('generateButton');
-const backButton = document.getElementById('backButton');
+// 视频播放结束后跳转到生成界面
+document.getElementById('introVideo').onended = function() {
+    document.getElementById('videoPage').style.display = 'none';
+    document.getElementById('generatePage').style.display = 'block';
+};
 
-let generateKeys = false; // 控制是否生成琴键
-let assignedChords = []; // 分配的和弦
+// 生成按钮点击事件
+document.getElementById('generateButton').onclick = function() {
+    // 随机生成和弦
+    generateChords();
 
-// 初始化和弦列表
-const chordList = [
-  ["Fm", "Am", "C"],
-  ["Fm", "Am", "G"],
-  ["Fm", "Am", "Dm"],
-  ["Fm", "Am", "Bm"],
-  ["Fm", "Am", "F"],
-  ["Fm", "C", "G"],
-  ["Fm", "C", "Dm"],
-  ["Fm", "C", "Bm"],
-  ["Fm", "C", "F"],
-  ["Fm", "G", "Dm"],
-  ["Fm", "G", "Bm"],
-  ["Fm", "G", "F"],
-  ["Fm", "Dm", "Bm"],
-  ["Fm", "Dm", "F"],
-  ["Fm", "Bm", "F"],
-  ["Am", "C", "G"],
-  ["Am", "C", "Dm"],
-  ["Am", "C", "Bm"],
-  ["Am", "C", "F"],
-  ["Am", "G", "Dm"],
-  ["Am", "G", "Bm"],
-  ["Am", "G", "F"],
-  ["Am", "Dm", "Bm"],
-  ["Am", "Dm", "F"],
-  ["Am", "Bm", "F"],
-  ["C", "G", "Dm"],
-  ["C", "G", "Bm"],
-  ["C", "G", "F"],
-  ["C", "Dm", "Bm"],
-  ["C", "Dm", "F"],
-  ["C", "Bm", "F"],
-  ["G", "Dm", "Bm"],
-  ["G", "Dm", "F"],
-  ["G", "Bm", "F"],
-  ["Dm", "Bm", "F"]
-];
+    // 播放 Analyze01 视频
+    let analyzeVideo = document.createElement('video');
+    analyzeVideo.src = 'Analyze01.mp4';  // 请在这里替换为实际路径
+    analyzeVideo.autoplay = true;
+    analyzeVideo.onended = function() {
+        // 生成完成后显示和弦按钮
+        document.getElementById('chordArea').style.display = 'flex';
+    };
+    document.body.appendChild(analyzeVideo);
+};
 
-// 按下生成按钮时的行为
-generateButton.addEventListener('click', function() {
-    generateKeys = true;
-    analyzeVideo.play();
-    introVideo.pause();
-    assignChordsToKeys();
-    drawCanvas();
-});
+// 返回按钮点击事件
+document.getElementById('returnButton').onclick = function() {
+    window.location.reload();  // 返回上一界面
+};
 
-// 按下返回按钮时的行为
-backButton.addEventListener('click', function() {
-    textInput.value = '';
-    generateKeys = false;
-    introVideo.play();
-    analyzeVideo.pause();
-    drawCanvas();
-});
+// 随机生成四个和弦按钮
+function generateChords() {
+    let chords = getRandomChords();  // 获取随机生成的和弦
+    let keys = ['Z', 'X', 'C', 'V'];  // 对应的按键
 
-// 随机分配和弦
-function assignChordsToKeys() {
-    // 随机打乱和弦组合顺序
-    assignedChords = [];
-    const shuffledChords = chordList.sort(() => Math.random() - 0.5);
-    assignedChords.push(shuffledChords[0]);
-    assignedChords.push(shuffledChords[1]);
-    assignedChords.push(shuffledChords[2]);
-    assignedChords.push(shuffledChords[3]);
-}
-
-// 绘制画布上的内容
-function drawCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (!generateKeys) {
-        // 背景图绘制
-        const img = new Image();
-        img.src = 'assets/Input01.png';
-        img.onload = function() {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-
-        ctx.font = "20px Arial";
-        ctx.fillStyle = "black";
-        ctx.fillText("请输入文本并点击生成", canvas.width / 2, canvas.height / 4);
-    } else {
-        // 显示和弦
-        ctx.fillText("Z: " + assignedChords[0].join(" - "), canvas.width / 2, canvas.height / 2 + 60);
-        ctx.fillText("X: " + assignedChords[1].join(" - "), canvas.width / 2, canvas.height / 2 + 100);
-        ctx.fillText("C: " + assignedChords[2].join(" - "), canvas.width / 2, canvas.height / 2 + 140);
-        ctx.fillText("V: " + assignedChords[3].join(" - "), canvas.width / 2, canvas.height / 2 + 180);
+    // 将和弦名称绑定到对应的按钮
+    for (let i = 0; i < 4; i++) {
+        let chordButton = document.getElementById('chord' + keys[i]);
+        chordButton.textContent = chords[i];  // 设置和弦名称
     }
 }
 
-// 初始绘制
-drawCanvas();
+// 获取随机生成的和弦
+function getRandomChords() {
+    const chordList = [
+        ["Fm", "Am", "C"],
+        ["Fm", "Am", "G"],
+        ["Fm", "Am", "Dm"],
+        ["Fm", "Am", "Bm"],
+        ["Fm", "Am", "F"],
+        ["Fm", "C", "G"],
+        ["Fm", "C", "Dm"],
+        ["Fm", "C", "Bm"],
+        ["Fm", "C", "F"],
+        ["Fm", "G", "Dm"],
+        ["Fm", "G", "Bm"],
+        ["Fm", "G", "F"],
+        ["Fm", "Dm", "Bm"],
+        ["Fm", "Dm", "F"],
+        ["Fm", "Bm", "F"],
+        ["Am", "C", "G"],
+        ["Am", "C", "Dm"],
+        ["Am", "C", "Bm"],
+        ["Am", "C", "F"],
+        ["Am", "G", "Dm"],
+        ["Am", "G", "Bm"],
+        ["Am", "G", "F"],
+        ["Am", "Dm", "Bm"],
+        ["Am", "Dm", "F"],
+        ["Am", "Bm", "F"],
+        ["C", "G", "Dm"],
+        ["C", "G", "Bm"],
+        ["C", "G", "F"],
+        ["C", "Dm", "Bm"],
+        ["C", "Dm", "F"],
+        ["C", "Bm", "F"],
+        ["G", "Dm", "Bm"],
+        ["G", "Dm", "F"],
+        ["G", "Bm", "F"],
+        ["Dm", "Bm", "F"]
+    ];
+
+    // 随机打乱和弦组合顺序并返回前四个和弦
+    const shuffledChords = chordList.sort(() => Math.random() - 0.5);
+    return [shuffledChords[0].join(" - "), shuffledChords[1].join(" - "), shuffledChords[2].join(" - "), shuffledChords[3].join(" - ")];
+}
+
+// 监听键盘按键事件
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Z') {
+        // 播放和弦1
+        console.log('播放和弦1');
+    } else if (event.key === 'X') {
+        // 播放和弦2
+        console.log('播放和弦2');
+    } else if (event.key === 'C') {
+        // 播放和弦3
+        console.log('播放和弦3');
+    } else if (event.key === 'V') {
+        // 播放和弦4
+        console.log('播放和弦4');
+    }
+});
