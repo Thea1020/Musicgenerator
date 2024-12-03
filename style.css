@@ -18,6 +18,8 @@ html, body {
     position: relative;
     overflow: hidden;
     background-color: #000;  /* 可以更改为背景色 */
+    max-width: 1920px; /* 限制最大宽度为1920px */
+    max-height: 1080px; /* 限制最大高度为1080px */
 }
 
 /* 视频和图像适应容器 */
