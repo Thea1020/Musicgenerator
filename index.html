@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和弦生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas" width="1194" height="834"></canvas>
+        <div id="videoContainer">
+            <video id="introVideo" class="video" loop>
+                <source src="assets/MusicIP.mp4" type="video/mp4">
+            </video>
+            <video id="analyzeVideo" class="video" loop>
+                <source src="assets/Analyze01.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div id="controls">
+            <input type="text" id="textInput" placeholder="请输入文本...">
+            <button id="generateButton">生成</button>
+            <button id="backButton">返回</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
