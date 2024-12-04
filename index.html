@@ -1,48 +1,59 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANDBOX</title>
-    <link rel="stylesheet" href="style.css">
+    <title>音乐和弦生成器</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 视频播放页面 -->
-    <div id="videoPage">
-        <video id="introVideo" src="MusicIP.mp4" autoplay></video>
+    <!-- 初始视频界面 -->
+    <div id="initial-screen" class="screen active">
+        <video id="intro-video" class="centered-video">
+            <source src="MusicIP.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <!-- 生成界面 -->
-    <div id="generatePage" style="display: none;">
-        <!-- 背景 -->
-        <div id="background">
-            <img src="Input01.png" alt="背景图" id="backgroundImg">
+    <!-- 输入界面 -->
+    <div id="input-screen" class="screen">
+        <div class="background">
+            <img src="Input01.png" alt="背景" class="background-image">
         </div>
-
-        <!-- 输入框 -->
-        <div id="inputArea">
-            <img src="InputBar.png" alt="输入框" id="inputBar">
-            <input type="text" id="textInput" placeholder="请输入文本..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Put your keywords here...'">
-        </div>
-
-        <!-- 生成按钮 -->
-        <button id="generateButton">
-            <img src="GK.png" alt="生成" id="generateImg">
-        </button>
-
-        <!-- 返回按钮 -->
-        <button id="returnButton">
-            <img src="Return.png" alt="返回" id="returnImg">
-        </button>
-
-        <!-- 隐藏的和弦生成区域 -->
-        <div id="chordArea" style="display: none;">
-            <div class="chordButton" id="chordZ">Z</div>
-            <div class="chordButton" id="chordX">X</div>
-            <div class="chordButton" id="chordC">C</div>
-            <div class="chordButton" id="chordV">V</div>
+        <div class="input-container">
+            <img src="InputBar.png" alt="输入框" id="input-bar" class="clickable">
+            <input type="text" id="text-input" class="hidden">
+            <img src="GK.png" alt="生成" id="generate-button" class="clickable">
         </div>
     </div>
+
+    <!-- 分析视频界面 -->
+    <div id="analysis-screen" class="screen">
+        <video id="analysis-video" class="centered-video">
+            <source src="Analyze01.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- 和弦播放界面 -->
+    <div id="chord-screen" class="screen">
+        <div class="background">
+            <img src="Input01.png" alt="背景" class="background-image">
+        </div>
+        <div class="chord-buttons">
+            <div class="chord-button" data-key="Z"></div>
+            <div class="chord-button" data-key="X"></div>
+            <div class="chord-button" data-key="C"></div>
+            <div class="chord-button" data-key="V"></div>
+        </div>
+        <div class="key-hints">
+            <span>Z</span>
+            <span>X</span>
+            <span>C</span>
+            <span>V</span>
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <img src="Return.png" alt="返回" id="return-button" class="hidden clickable">
 
     <script src="script.js"></script>
 </body>
