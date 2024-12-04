@@ -1,106 +1,129 @@
-/* 样式设置 */
-html, body {
-    height: 100%;
+* {
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    position: relative;
-}
-
-/* 背景样式 */
-#background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#backgroundImg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translateY(50%); /* 向下移动50% */
-}
-
-/* 视频页面 */
-#videoPage video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translateY(50%); /* 向下移动50% */
-}
-
-/* 生成页面 */
-#generatePage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 2;
-}
-
-/* 输入框的样式 */
-#inputArea {
-    position: relative;
-}
-
-#inputBar {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateY(50%); /* 向下移动50% */
-}
-
-#textInput {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateY(50%); /* 向下移动50% */
-    font-size: 20px;
-    border: none;
-    background: transparent;
-    text-align: center;
-    color: white;
-    width: 250px;
-    padding: 10px;
-}
-
-/* 生成按钮和返回按钮 */
-button {
-    background: none;
-    border: none;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.centered-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: black;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1;
+}
+
+#input-bar {
+    height: 60px;
     cursor: pointer;
-    margin-top: 20px;
 }
 
-#generateButton img,
-#returnButton img {
-    width: 50px;
-    height: 50px;
-    transform: translateY(50%); /* 向下移动50% */
+#generate-button {
+    height: 60px;
+    cursor: pointer;
 }
 
-/* 和弦按钮 */
-.chordButton {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    background-color: #000;
+#text-input {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    border: none;
     color: white;
+    font-size: 24px;
     text-align: center;
-    line-height: 50px;
-    margin: 10px;
-    cursor: pointer;
+    width: 80%;
+}
+
+.chord-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1;
+}
+
+.chord-button {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
     border-radius: 10px;
-    transform: translateY(50%); /* 向下移动50% */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chord-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.chord-button.active {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.key-hints {
+    display: flex;
+    justify-content: center;
+    gap: 95px;
+    margin-top: 10px;
+    color: white;
+    font-size: 24px;
+    z-index: 1;
+}
+
+#return-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.clickable {
+    cursor: pointer;
 }
