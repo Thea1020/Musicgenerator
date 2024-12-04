@@ -1,101 +1,156 @@
+// 音频上下文
+let audioContext;
+// 和弦数组
+const chords = [
+    // 添加4种不同的和弦频率组合
+    [261.63, 329.63, 392.00], // C大三和弦
+    [293.66, 369.99, 440.00], // D大三和弦
+    [329.63, 415.30, 493.88], // E大三和弦
+    [349.23, 440.00, 523.25], // F大三和弦
+];
 
-// 点击视频后跳转到生成界面
-document.getElementById('introVideo').onclick = function() {
-    document.getElementById('videoPage').style.display = 'none'; // 隐藏视频界面
-    document.getElementById('generatePage').style.display = 'block'; // 显示生成界面
-};
+// 当前分配的和弦映射
+let currentChordMapping = {};
 
-// 生成按钮点击事件
-document.getElementById('generateButton').onclick = function() {
-    // 随机生成和弦
-    generateChords();
-
-    // 播放 Analyze01 视频
-    let analyzeVideo = document.createElement('video');
-    analyzeVideo.src = 'Analyze01.mp4';  // 请在这里替换为实际路径
-    analyzeVideo.autoplay = true;
-    analyzeVideo.onended = function() {
-        // 生成完成后显示和弦按钮
-        document.getElementById('chordArea').style.display = 'flex';
-    };
-    document.body.appendChild(analyzeVideo);
-};
-
-// 返回按钮点击事件
-document.getElementById('returnButton').onclick = function() {
-    window.location.reload();  // 返回上一界面
-};
-
-// 随机生成四个和弦按钮
-function generateChords() {
-    let chords = getRandomChords();  // 获取随机生成的和弦
-    let keys = ['Z', 'X', 'C', 'V'];  // 对应的按键
-
-    // 将和弦名称绑定到对应的按钮
-    for (let i = 0; i < 4; i++) {
-        let chordButton = document.getElementById('chord' + keys[i]);
-        chordButton.textContent = chords[i];  // 设置和弦名称
-    }
+// 初始化音频上下文
+function initAudio() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-// 获取随机生成的和弦
-function getRandomChords() {
-    const chordList = [
-        ["Fm", "Am", "C"],
-        ["Fm", "Am", "G"],
-        ["Fm", "Am", "Dm"],
-        ["Fm", "Am", "Bm"],
-        ["Fm", "Am", "F"],
-        ["Fm", "C", "G"],
-        ["Fm", "C", "Dm"],
-        ["Fm", "C", "Bm"],
-        ["Fm", "C", "F"],
-        ["Fm", "G", "Dm"],
-        ["Fm", "G", "Bm"],
-        ["Fm", "G", "F"],
-        ["Fm", "Dm", "Bm"],
-        ["Fm", "Dm", "F"],
-        ["Fm", "Bm", "F"],
-        ["Am", "C", "G"],
-        ["Am", "C", "Dm"],
-        ["Am", "C", "Bm"],
-        ["Am", "C", "F"],
-        ["Am", "G", "Dm"],
-        ["Am", "G", "Bm"],
-        ["Am", "G", "F"],
-        ["Am", "Dm", "Bm"],
-        ["Am", "Dm", "F"],
-        ["Am", "Bm", "F"],
-        ["C", "G", "Dm"],
-        ["C", "G", "Bm"],
-        ["C", "G", "F"],
-        ["C", "Dm", "Bm"],
-        ["C", "Dm", "F"],
-        ["C", "Bm", "F"],
-        ["G", "Dm", "Bm"],
-        ["G", "Dm", "F"],
-        ["G", "Bm", "F"],
-        ["Dm", "Bm", "F"]
-    ];
-
-    // 随机打乱和弦组合顺序并返回前四个和弦
-    const shuffledChords = chordList.sort(() => Math.random() - 0.5);
-    return [shuffledChords[0].join(" - "), shuffledChords[1].join(" - "), shuffledChords[2].join(" - "), shuffledChords[3].join(" - ")];
+// 播放和弦
+function playChord(frequencies) {
+    if (!audioContext) initAudio();
+    
+    const oscillators = frequencies.map(freq => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.value = freq;
+        
+        gainNode.gain.value = 0.2;
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start();
+        
+        // 0.5秒后停止
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        oscillator.stop(audioContext.currentTime + 0.5);
+        
+        return oscillator;
+    });
 }
 
-// 监听键盘按键事件
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Z') {
-        // 播放和弦1
-        console.log('播放和弦1');
-    } else if (event.key === 'X') {
-        // 播放和弦2
-        console.log('播放和弦2');
-    } else if (event.key === 'C') {
-        // 播放和弦3
-        console.log('播放和弦3');
-    } else if (event.key === 'V') {
-        // 播放和弦4
-        console.log('播放和弦4');
+// 随机分配和弦
+function assignRandomChords(text) {
+    const keys = ['Z', 'X', 'C', 'V'];
+    const shuffledChords = [...chords].sort(() => Math.random() - 0.5);
+    
+    currentChordMapping = {};
+    keys.forEach((key, index) => {
+        currentChordMapping[key] = shuffledChords[index];
+    });
+    
+    // 显示像素点形状的按钮
+    document.querySelectorAll('.chord-button').forEach((button, index) => {
+        const key = keys[index];
+        button.innerHTML = generatePixelPattern(); // 生成随机像素图案
+    });
+}
+
+// 生成随机像素图案
+function generatePixelPattern() {
+    const pattern = document.createElement('div');
+    pattern.style.display = 'grid';
+    pattern.style.gridTemplateColumns = 'repeat(5, 1fr)';
+    pattern.style.width = '100%';
+    pattern.style.height = '100%';
+    
+    for (let i = 0; i < 25; i++) {
+        const pixel = document.createElement('div');
+        pixel.style.background = Math.random() > 0.5 ? 'white' : 'transparent';
+        pattern.appendChild(pixel);
     }
+    
+    return pattern.outerHTML;
+}
+
+// 界面控制
+document.addEventListener('DOMContentLoaded', () => {
+    const introVideo = document.getElementById('intro-video');
+    const analysisVideo = document.getElementById('analysis-video');
+    const returnButton = document.getElementById('return-button');
+    const inputBar = document.getElementById('input-bar');
+    const textInput = document.getElementById('text-input');
+    const generateButton = document.getElementById('generate-button');
+    
+    // 显示指定界面
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+    
+    // 初始视频播放结束后显示输入界面
+    introVideo.addEventListener('ended', () => {
+        showScreen('input-screen');
+        returnButton.classList.remove('hidden');
+    });
+    
+    // 点击输入框图像显示文本输入
+    inputBar.addEventListener('click', () => {
+        textInput.classList.remove('hidden');
+        textInput.focus();
+    });
+    
+    // 点击生成按钮
+    generateButton.addEventListener('click', () => {
+        const inputText = textInput.value.trim();
+        if (inputText) {
+            showScreen('analysis-screen');
+            analysisVideo.play();
+        }
+    });
+    
+    // 分析视频播放结束后显示和弦界面
+    analysisVideo.addEventListener('ended', () => {
+        showScreen('chord-screen');
+        assignRandomChords(textInput.value);
+    });
+    
+    // 键盘事件监听
+    document.addEventListener('keydown', (event) => {
+        const key = event.key.toUpperCase();
+        if (currentChordMapping[key]) {
+            const button = document.querySelector(`[data-key="${key}"]`);
+            if (button) {
+                button.classList.add('active');
+                playChord(currentChordMapping[key]);
+            }
+        }
+    });
+    
+    document.addEventListener('keyup', (event) => {
+        const key = event.key.toUpperCase();
+        const button = document.querySelector(`[data-key="${key}"]`);
+        if (button) {
+            button.classList.remove('active');
+        }
+    });
+    
+    // 返回按钮点击事件
+    returnButton.addEventListener('click', () => {
+        showScreen('input-screen');
+        textInput.value = '';
+        textInput.classList.add('hidden');
+        currentChordMapping = {};
+    });
+    
+    // 自动播放初始视频
+    introVideo.play().catch(error => {
+        console.log('Auto-play was prevented. Please click to start the video.');
+    });
 });
